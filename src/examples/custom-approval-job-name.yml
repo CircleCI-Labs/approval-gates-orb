@@ -1,7 +1,7 @@
 ---
 description: >
   When a workflow has multiple approval gates, specify which approval
-  job to validate using the approval-job-name parameter.
+  job to validate using the approval_job_name parameter.
 usage:
   version: 2.1
   orbs:
@@ -12,7 +12,7 @@ usage:
         - image: cimg/base:current
       steps:
         - approval-gates/validate_approver:
-            approval-job-name: approve-staging
+            approval_job_name: approve-staging
         - run:
             name: Deploy to staging
             command: echo "Deploying to staging..."
@@ -21,7 +21,7 @@ usage:
         - image: cimg/base:current
       steps:
         - approval-gates/validate_approver:
-            approval-job-name: approve-prod
+            approval_job_name: approve-prod
         - run:
             name: Deploy to production
             command: echo "Deploying to prod..."

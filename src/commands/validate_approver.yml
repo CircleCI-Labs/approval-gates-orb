@@ -5,20 +5,20 @@ description: >
   deployment job that follows an approval gate. Automatically detects
   the platform (Linux, macOS, or Windows).
 parameters:
-  api-token:
+  api_token:
     type: env_var_name
     default: CIRCLECI_API_TOKEN
     description: >
       Name of the environment variable containing a CircleCI API token
       with read access. Typically provided via a context.
-  authorized-approvers:
+  authorized_approvers:
     type: env_var_name
     default: AUTHORIZED_APPROVERS
     description: >
       Name of the environment variable containing a comma-separated
       list of login usernames authorized to approve deployments.
       Typically provided via a context.
-  approval-job-name:
+  approval_job_name:
     type: string
     default: ""
     description: >
@@ -29,7 +29,7 @@ steps:
       name: Validate approver authorization
       shell: bash
       environment:
-        ORB_VAL_API_TOKEN_VAR: << parameters.api-token >>
-        ORB_VAL_APPROVERS_VAR: << parameters.authorized-approvers >>
-        ORB_VAL_APPROVAL_JOB_NAME: << parameters.approval-job-name >>
+        ORB_VAL_API_TOKEN_VAR: << parameters.api_token >>
+        ORB_VAL_APPROVERS_VAR: << parameters.authorized_approvers >>
+        ORB_VAL_APPROVAL_JOB_NAME: << parameters.approval_job_name >>
       command: <<include(scripts/validate_approver.sh)>>

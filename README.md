@@ -40,9 +40,9 @@ Validates that the user who approved the upstream approval job is in the authori
 
 **Parameters:**
 
-- `api-token` (env_var_name): Name of the env var containing the CircleCI API token (default: `CIRCLECI_API_TOKEN`)
-- `authorized-approvers` (env_var_name): Name of the env var containing the comma-separated authorized logins (default: `AUTHORIZED_APPROVERS`)
-- `approval-job-name` (string): Name of the specific approval job to check. If empty, the first successful approval-type job in the workflow is used (default: `""`)
+- `api_token` (env_var_name): Name of the env var containing the CircleCI API token (default: `CIRCLECI_API_TOKEN`)
+- `authorized_approvers` (env_var_name): Name of the env var containing the comma-separated authorized logins (default: `AUTHORIZED_APPROVERS`)
+- `approval_job_name` (string): Name of the specific approval job to check. If empty, the first successful approval-type job in the workflow is used (default: `""`)
 
 The platform is detected automatically at runtime. No configuration needed for Linux, macOS, or Windows executors.
 

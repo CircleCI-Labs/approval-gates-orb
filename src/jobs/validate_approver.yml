@@ -5,19 +5,19 @@ description: >
   the approval gate and your deployment job, or use the
   validate_approver command directly as a step inside your deploy job.
 parameters:
-  api-token:
+  api_token:
     type: env_var_name
     default: CIRCLECI_API_TOKEN
     description: >
       Name of the environment variable containing a CircleCI API token
       with read access.
-  authorized-approvers:
+  authorized_approvers:
     type: env_var_name
     default: AUTHORIZED_APPROVERS
     description: >
       Name of the environment variable containing a comma-separated
       list of authorized approver logins.
-  approval-job-name:
+  approval_job_name:
     type: string
     default: ""
     description: >
@@ -33,6 +33,6 @@ parameters:
 executor: << parameters.executor >>
 steps:
   - validate_approver:
-      api-token: << parameters.api-token >>
-      authorized-approvers: << parameters.authorized-approvers >>
-      approval-job-name: << parameters.approval-job-name >>
+      api_token: << parameters.api_token >>
+      authorized_approvers: << parameters.authorized_approvers >>
+      approval_job_name: << parameters.approval_job_name >>
