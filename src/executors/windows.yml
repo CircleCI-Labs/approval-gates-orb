@@ -1,0 +1,13 @@
+description: >
+  Windows machine executor with PowerShell.
+  Used for PowerShell-based approval validation.
+machine:
+  image: windows-server-2022-gui:<< parameters.tag >>
+resource_class: windows.medium
+shell: powershell.exe
+parameters:
+  tag:
+    default: current
+    description: >
+      Windows machine image tag.
+    type: string

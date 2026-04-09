@@ -1,0 +1,31 @@
+description: >
+  Approval gate validation on a Windows executor using PowerShell.
+  Set platform to windows and use a Windows executor.
+usage:
+  version: 2.1
+  orbs:
+    approval-gates: circleci-labs/approval-gates@1.0.0
+  jobs:
+    deploy-to-prod:
+      executor: approval-gates/windows
+      steps:
+        - approval-gates/validate-approver:
+            platform: windows
+        - run:
+            name: Deploy to production
+            shell: powershell.exe
+            command: Write-Host "Deploying..."
+  workflows:
+    build-approve-deploy:
+      jobs:
+        - build
+        - approve-deploy:
+            type: approval
+            requires:
+              - build
+        - deploy-to-prod:
+            context:
+              - deployment-approvers
+              - circleci-api
+            requires:
+              - approve-deploy

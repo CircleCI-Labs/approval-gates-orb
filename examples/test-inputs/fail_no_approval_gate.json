@@ -1,0 +1,29 @@
+{
+  "_compiled_": {
+    "meta": {
+      "project_id": "00000000-0000-0000-0000-000000000000"
+    }
+  },
+  "jobs": {
+    "build": {
+      "docker": [{"image": "cimg/base:current"}],
+      "steps": [{"run": "echo building"}]
+    },
+    "deploy-to-prod": {
+      "docker": [{"image": "cimg/base:current"}],
+      "context": ["deployment-approvers", "circleci-api"],
+      "steps": [
+        {"run": {"name": "Validate approver authorization", "command": "bash ./scripts/validate_approver.sh"}},
+        {"run": "echo deploying"}
+      ]
+    }
+  },
+  "workflows": {
+    "build-and-deploy": {
+      "jobs": [
+        {"build": {}},
+        {"deploy-to-prod": {"requires": ["build"]}}
+      ]
+    }
+  }
+}
