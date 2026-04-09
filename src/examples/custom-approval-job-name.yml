@@ -5,7 +5,7 @@ description: >
 usage:
   version: 2.1
   orbs:
-    approval-gates: circleci-labs/approval-gates@1.0.0
+    approval-gates: cci-labs/approval-gates@1.0.0
   jobs:
     deploy-to-staging:
       docker:
