@@ -1,3 +1,4 @@
+---
 description: >
   Linux Docker executor with curl and jq pre-installed.
   Used for Bash-based approval validation.

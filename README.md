@@ -18,7 +18,7 @@ This orb provides commands and jobs to:
 
 - Validate that the user who clicked "Approve" on a workflow is in an authorized approvers list
 - Block unauthorized deployments immediately with a clear error message
-- Support both Linux (Bash) and Windows (PowerShell) executors
+- Support Linux, macOS, and Windows executors with automatic platform detection
 - Work with any VCS provider
 
 CircleCI's `type: approval` workflow step does not natively restrict who can approve -- anyone with write access to the project can click "Approve." This orb adds a runtime authorization check after approval, comparing the approver's identity against a context-managed allowlist.
@@ -30,19 +30,21 @@ CircleCI's `type: approval` workflow step does not natively restrict who can app
   - `CIRCLECI_API_TOKEN`: A CircleCI personal API token with read access
 - A CircleCI context named `deployment-approvers` with the following environment variable:
   - `AUTHORIZED_APPROVERS`: Comma-separated list of authorized CircleCI login usernames (e.g. `Zendaya,Muhammad,Ryan Coogler`)
+- `curl` and `jq` available in the executor. The orb's built-in executors and all standard CircleCI images (`cimg/*`, machine, macOS) include both. On Windows, jq is installed automatically if missing. If you use a custom or minimal Docker image, ensure both tools are installed.
 
 ## Commands
 
-### validate-approver
+### validate_approver
 
 Validates that the user who approved the upstream approval job is in the authorized approvers list. Run this as the first step of any deployment job that follows an approval gate.
 
 **Parameters:**
 
-- `api-token` (env_var_name): Name of the env var containing the CircleCI API token (default: `CIRCLECI_API_TOKEN`)
-- `authorized-approvers` (env_var_name): Name of the env var containing the comma-separated authorized logins (default: `AUTHORIZED_APPROVERS`)
-- `approval-job-name` (string): Name of the specific approval job to check. If empty, the first successful approval-type job in the workflow is used (default: `""`)
-- `platform` (enum): Target platform, `linux` or `windows` (default: `linux`)
+- `api_token` (env_var_name): Name of the env var containing the CircleCI API token (default: `CIRCLECI_API_TOKEN`)
+- `authorized_approvers` (env_var_name): Name of the env var containing the comma-separated authorized logins (default: `AUTHORIZED_APPROVERS`)
+- `approval_job_name` (string): Name of the specific approval job to check. If empty, the first successful approval-type job in the workflow is used (default: `""`)
+
+The platform is detected automatically at runtime. No configuration needed for Linux, macOS, or Windows executors.
 
 Note on env_var_name parameters:
 
@@ -50,13 +52,13 @@ Note on env_var_name parameters:
 
 ## Jobs
 
-### validate-approver
+### validate_approver
 
-A standalone job that wraps the `validate-approver` command. Use this as a separate workflow step between the approval gate and your deployment job.
+A standalone job that wraps the `validate_approver` command. Use this as a separate workflow step between the approval gate and your deployment job.
 
 **Parameters:**
 
-- All parameters from the `validate-approver` command above, plus:
+- All parameters from the `validate_approver` command above, plus:
 - `executor` (executor): Executor to run the validation on (default: `default`)
 
 ## Executors
@@ -71,7 +73,7 @@ Linux Docker executor (`cimg/base`) with curl and jq pre-installed.
 
 ### windows
 
-Windows machine executor (`windows-server-2022-gui`) with PowerShell.
+Windows machine executor (`windows-server-2022-gui`). The orb automatically detects the platform and installs any missing dependencies (such as jq).
 
 **Parameters:**
 
@@ -90,7 +92,7 @@ jobs:
     docker:
       - image: cimg/base:current
     steps:
-      - approval-gates/validate-approver
+      - approval-gates/validate_approver
       - run:
           name: Deploy to production
           command: |

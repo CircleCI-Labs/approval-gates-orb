@@ -1,6 +1,7 @@
+---
 description: >
-  Approval gate validation on a Windows executor using PowerShell.
-  Set platform to windows and use a Windows executor.
+  Approval gate validation on a Windows executor. The orb automatically
+  detects the platform and installs dependencies as needed.
 usage:
   version: 2.1
   orbs:
@@ -9,8 +10,7 @@ usage:
     deploy-to-prod:
       executor: approval-gates/windows
       steps:
-        - approval-gates/validate-approver:
-            platform: windows
+        - approval-gates/validate_approver
         - run:
             name: Deploy to production
             shell: powershell.exe

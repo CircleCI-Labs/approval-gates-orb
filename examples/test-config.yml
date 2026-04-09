@@ -1,0 +1,58 @@
+version: 2.1
+
+orbs:
+  approval-gates: cci-labs/approval-gates@dev:testing
+
+jobs:
+  build:
+    docker:
+      - image: cimg/base:current
+    steps:
+      - run: echo "Build complete"
+
+  deploy-linux:
+    docker:
+      - image: cimg/base:current
+    steps:
+      - approval-gates/validate_approver
+      - run:
+          name: Deploy (Linux)
+          command: echo "Linux deployment authorized"
+
+  deploy-windows:
+    executor: approval-gates/windows
+    steps:
+      - approval-gates/validate_approver
+      - run:
+          name: Deploy (Windows)
+          shell: powershell.exe
+          command: Write-Host "Windows deployment authorized"
+
+workflows:
+  test-linux:
+    jobs:
+      - build
+      - approve-linux:
+          type: approval
+          requires:
+            - build
+      - deploy-linux:
+          context:
+            - deployment-approvers
+            - circleci-api
+          requires:
+            - approve-linux
+
+  test-windows:
+    jobs:
+      - build
+      - approve-windows:
+          type: approval
+          requires:
+            - build
+      - deploy-windows:
+          context:
+            - deployment-approvers
+            - circleci-api
+          requires:
+            - approve-windows

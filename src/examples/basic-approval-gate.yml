@@ -1,5 +1,6 @@
+---
 description: >
-  Basic approval gate pattern. The validate-approver command runs as
+  Basic approval gate pattern. The validate_approver command runs as
   the first step in the deploy job, blocking unauthorized approvers.
   Requires two contexts: one with CIRCLECI_API_TOKEN and one with
   AUTHORIZED_APPROVERS.
@@ -12,7 +13,7 @@ usage:
       docker:
         - image: cimg/base:current
       steps:
-        - approval-gates/validate-approver
+        - approval-gates/validate_approver
         - run:
             name: Deploy to production
             command: echo "Deploying..."

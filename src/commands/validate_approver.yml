@@ -1,0 +1,35 @@
+---
+description: >
+  Validates that the user who approved an upstream approval job is in
+  the authorized approvers list. Run this as the first step of any
+  deployment job that follows an approval gate. Automatically detects
+  the platform (Linux, macOS, or Windows).
+parameters:
+  api_token:
+    type: env_var_name
+    default: CIRCLECI_API_TOKEN
+    description: >
+      Name of the environment variable containing a CircleCI API token
+      with read access. Typically provided via a context.
+  authorized_approvers:
+    type: env_var_name
+    default: AUTHORIZED_APPROVERS
+    description: >
+      Name of the environment variable containing a comma-separated
+      list of login usernames authorized to approve deployments.
+      Typically provided via a context.
+  approval_job_name:
+    type: string
+    default: ""
+    description: >
+      Name of the specific approval job to check. If empty, the first
+      successful approval-type job in the workflow is used.
+steps:
+  - run:
+      name: Validate approver authorization
+      shell: bash
+      environment:
+        ORB_VAL_API_TOKEN_VAR: << parameters.api_token >>
+        ORB_VAL_APPROVERS_VAR: << parameters.authorized_approvers >>
+        ORB_VAL_APPROVAL_JOB_NAME: << parameters.approval_job_name >>
+      command: <<include(scripts/validate_approver.sh)>>
