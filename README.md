@@ -34,7 +34,7 @@ CircleCI's `type: approval` workflow step does not natively restrict who can app
 
 ## Commands
 
-### validate-approver
+### validate_approver
 
 Validates that the user who approved the upstream approval job is in the authorized approvers list. Run this as the first step of any deployment job that follows an approval gate.
 
@@ -52,13 +52,13 @@ Note on env_var_name parameters:
 
 ## Jobs
 
-### validate-approver
+### validate_approver
 
-A standalone job that wraps the `validate-approver` command. Use this as a separate workflow step between the approval gate and your deployment job.
+A standalone job that wraps the `validate_approver` command. Use this as a separate workflow step between the approval gate and your deployment job.
 
 **Parameters:**
 
-- All parameters from the `validate-approver` command above, plus:
+- All parameters from the `validate_approver` command above, plus:
 - `executor` (executor): Executor to run the validation on (default: `default`)
 
 ## Executors
@@ -92,7 +92,7 @@ jobs:
     docker:
       - image: cimg/base:current
     steps:
-      - approval-gates/validate-approver
+      - approval-gates/validate_approver
       - run:
           name: Deploy to production
           command: |

@@ -1,5 +1,6 @@
+---
 description: >
-  Uses the validate-approver job as a standalone workflow step between
+  Uses the validate_approver job as a standalone workflow step between
   the approval gate and your deployment job. This keeps your deploy
   job clean and separates the authorization check.
 usage:
@@ -14,7 +15,7 @@ usage:
             type: approval
             requires:
               - build
-        - approval-gates/validate-approver:
+        - approval-gates/validate_approver:
             context:
               - deployment-approvers
               - circleci-api
@@ -22,4 +23,4 @@ usage:
               - approve-deploy
         - deploy-to-prod:
             requires:
-              - approval-gates/validate-approver
+              - approval-gates/validate_approver

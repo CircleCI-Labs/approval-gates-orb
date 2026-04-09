@@ -14,7 +14,7 @@ jobs:
     docker:
       - image: cimg/base:current
     steps:
-      - approval-gates/validate-approver
+      - approval-gates/validate_approver
       - run:
           name: Deploy (Linux)
           command: echo "Linux deployment authorized"
@@ -22,7 +22,7 @@ jobs:
   deploy-windows:
     executor: approval-gates/windows
     steps:
-      - approval-gates/validate-approver
+      - approval-gates/validate_approver
       - run:
           name: Deploy (Windows)
           shell: powershell.exe

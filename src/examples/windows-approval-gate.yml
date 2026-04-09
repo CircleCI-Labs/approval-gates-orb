@@ -1,3 +1,4 @@
+---
 description: >
   Approval gate validation on a Windows executor. The orb automatically
   detects the platform and installs dependencies as needed.
@@ -9,7 +10,7 @@ usage:
     deploy-to-prod:
       executor: approval-gates/windows
       steps:
-        - approval-gates/validate-approver
+        - approval-gates/validate_approver
         - run:
             name: Deploy to production
             shell: powershell.exe

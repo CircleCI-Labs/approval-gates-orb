@@ -1,3 +1,4 @@
+---
 description: >
   When a workflow has multiple approval gates, specify which approval
   job to validate using the approval-job-name parameter.
@@ -10,7 +11,7 @@ usage:
       docker:
         - image: cimg/base:current
       steps:
-        - approval-gates/validate-approver:
+        - approval-gates/validate_approver:
             approval-job-name: approve-staging
         - run:
             name: Deploy to staging
@@ -19,7 +20,7 @@ usage:
       docker:
         - image: cimg/base:current
       steps:
-        - approval-gates/validate-approver:
+        - approval-gates/validate_approver:
             approval-job-name: approve-prod
         - run:
             name: Deploy to production

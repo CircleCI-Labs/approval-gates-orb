@@ -1,8 +1,9 @@
+---
 description: >
   Validates that the user who approved an upstream approval job is
   authorized. Use this as a standalone job in your workflow between
   the approval gate and your deployment job, or use the
-  validate-approver command directly as a step inside your deploy job.
+  validate_approver command directly as a step inside your deploy job.
 parameters:
   api-token:
     type: env_var_name
@@ -31,7 +32,7 @@ parameters:
       Windows-based pipelines.
 executor: << parameters.executor >>
 steps:
-  - validate-approver:
+  - validate_approver:
       api-token: << parameters.api-token >>
       authorized-approvers: << parameters.authorized-approvers >>
       approval-job-name: << parameters.approval-job-name >>

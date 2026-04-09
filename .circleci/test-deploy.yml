@@ -82,7 +82,7 @@ jobs:
           name: Verify orb command fails gracefully without context
           command: |
             set +e
-            approval-gates/validate-approver 2>&1
+            approval-gates/validate_approver 2>&1
             EXIT_CODE=$?
             set -e
             if [ "$EXIT_CODE" -eq 0 ]; then

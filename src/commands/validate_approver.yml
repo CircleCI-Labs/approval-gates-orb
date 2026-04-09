@@ -1,3 +1,4 @@
+---
 description: >
   Validates that the user who approved an upstream approval job is in
   the authorized approvers list. Run this as the first step of any
