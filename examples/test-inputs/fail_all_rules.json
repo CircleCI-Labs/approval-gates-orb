@@ -1,0 +1,27 @@
+{
+  "_compiled_": {
+    "meta": {
+      "project_id": "00000000-0000-0000-0000-000000000000"
+    }
+  },
+  "jobs": {
+    "build": {
+      "docker": [{"image": "cimg/base:current"}],
+      "steps": [{"run": "echo building"}]
+    },
+    "deploy-to-prod": {
+      "docker": [{"image": "cimg/base:current"}],
+      "steps": [
+        {"run": "echo deploying with no guardrails"}
+      ]
+    }
+  },
+  "workflows": {
+    "yolo-deploy": {
+      "jobs": [
+        {"build": {}},
+        {"deploy-to-prod": {"requires": ["build"]}}
+      ]
+    }
+  }
+}

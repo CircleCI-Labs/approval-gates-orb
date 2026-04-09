@@ -1,0 +1,12 @@
+version: 2.1
+
+description: >
+  Enforces approval gating for production deployments on CircleCI.
+  Validates that the user who approved a workflow is on an authorized
+  approvers list before allowing deployment to proceed. Works with
+  any VCS provider. Supports Linux (Bash) and Windows (PowerShell)
+  executors.
+
+display:
+  home_url: "https://circleci.com/docs/workflows/#holding-a-workflow-for-a-manual-approval"
+  source_url: "https://github.com/CircleCI-Labs/approval-gates-orb"

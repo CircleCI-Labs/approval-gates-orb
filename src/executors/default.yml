@@ -1,0 +1,12 @@
+description: >
+  Linux Docker executor with curl and jq pre-installed.
+  Used for Bash-based approval validation.
+docker:
+  - image: cimg/base:<< parameters.tag >>
+parameters:
+  tag:
+    default: current
+    description: >
+      cimg/base image tag.
+      See https://hub.docker.com/r/cimg/base/tags
+    type: string

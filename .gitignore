@@ -1,0 +1,23 @@
+# Cursor IDE
+.cursor/
+.cursor/*
+
+# Packed orb output
+orb.yml
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Editor files
+*.swp
+*.swo
+*~
+.vscode/
+.idea/
+
+# Environment and secrets
+.env
+.env.*
+*.pem
+*.key

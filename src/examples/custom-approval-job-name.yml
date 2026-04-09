@@ -1,0 +1,50 @@
+description: >
+  When a workflow has multiple approval gates, specify which approval
+  job to validate using the approval-job-name parameter.
+usage:
+  version: 2.1
+  orbs:
+    approval-gates: circleci-labs/approval-gates@1.0.0
+  jobs:
+    deploy-to-staging:
+      docker:
+        - image: cimg/base:current
+      steps:
+        - approval-gates/validate-approver:
+            approval-job-name: approve-staging
+        - run:
+            name: Deploy to staging
+            command: echo "Deploying to staging..."
+    deploy-to-prod:
+      docker:
+        - image: cimg/base:current
+      steps:
+        - approval-gates/validate-approver:
+            approval-job-name: approve-prod
+        - run:
+            name: Deploy to production
+            command: echo "Deploying to prod..."
+  workflows:
+    multi-stage-deploy:
+      jobs:
+        - build
+        - approve-staging:
+            type: approval
+            requires:
+              - build
+        - deploy-to-staging:
+            context:
+              - deployment-approvers
+              - circleci-api
+            requires:
+              - approve-staging
+        - approve-prod:
+            type: approval
+            requires:
+              - deploy-to-staging
+        - deploy-to-prod:
+            context:
+              - deployment-approvers
+              - circleci-api
+            requires:
+              - approve-prod
