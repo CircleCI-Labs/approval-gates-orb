@@ -1,0 +1,141 @@
+version: 2.1
+orbs:
+  orb-tools: circleci/orb-tools@12.3
+  approval-gates: {}
+
+filters: &filters
+  tags:
+    only: /.*/
+
+release-filters: &release-filters
+  branches:
+    ignore: /.*/
+  tags:
+    only: /^v[0-9]+\.[0-9]+\.[0-9]+$/
+
+jobs:
+  test-missing-token:
+    docker:
+      - image: cimg/base:current
+    steps:
+      - checkout
+      - run:
+          name: Verify command fails without API token
+          command: |
+            set +e
+            bash src/scripts/validate_approver.sh 2>&1
+            EXIT_CODE=$?
+            set -e
+            if [ "$EXIT_CODE" -eq 0 ]; then
+              echo "FAIL: script should have exited non-zero without CIRCLECI_API_TOKEN"
+              exit 1
+            fi
+            echo "PASS: script correctly failed without API token"
+
+  test-missing-approvers:
+    docker:
+      - image: cimg/base:current
+    environment:
+      CIRCLECI_API_TOKEN: "fake-token-for-testing"
+    steps:
+      - checkout
+      - run:
+          name: Verify command fails without approvers list
+          command: |
+            set +e
+            bash src/scripts/validate_approver.sh 2>&1
+            EXIT_CODE=$?
+            set -e
+            if [ "$EXIT_CODE" -eq 0 ]; then
+              echo "FAIL: script should have exited non-zero without AUTHORIZED_APPROVERS"
+              exit 1
+            fi
+            echo "PASS: script correctly failed without approvers list"
+
+  test-missing-workflow-id:
+    docker:
+      - image: cimg/base:current
+    environment:
+      CIRCLECI_API_TOKEN: "fake-token-for-testing"
+      AUTHORIZED_APPROVERS: "testuser"
+    steps:
+      - checkout
+      - run:
+          name: Unset CIRCLE_WORKFLOW_ID to test guard
+          command: |
+            set +e
+            unset CIRCLE_WORKFLOW_ID
+            bash src/scripts/validate_approver.sh 2>&1
+            EXIT_CODE=$?
+            set -e
+            if [ "$EXIT_CODE" -eq 0 ]; then
+              echo "FAIL: script should have exited non-zero without CIRCLE_WORKFLOW_ID"
+              exit 1
+            fi
+            echo "PASS: script correctly failed without workflow ID"
+
+  test-orb-command:
+    docker:
+      - image: cimg/base:current
+    steps:
+      - run:
+          name: Verify orb command fails gracefully without context
+          command: |
+            set +e
+            approval-gates/validate-approver 2>&1
+            EXIT_CODE=$?
+            set -e
+            if [ "$EXIT_CODE" -eq 0 ]; then
+              echo "FAIL: command should have exited non-zero without required env vars"
+              exit 1
+            fi
+            echo "PASS: orb command correctly failed without API token"
+
+  test-os-detection:
+    docker:
+      - image: cimg/base:current
+    steps:
+      - checkout
+      - run:
+          name: Verify OS detection works on Linux
+          command: |
+            DETECTED=$(uname -s | tr '[:upper:]' '[:lower:]')
+            case "$DETECTED" in
+              linux*) echo "PASS: Detected Linux" ;;
+              *) echo "FAIL: Expected linux, got $DETECTED"; exit 1 ;;
+            esac
+      - run:
+          name: Verify dependencies are present
+          command: |
+            command -v curl || { echo "FAIL: curl not found"; exit 1; }
+            command -v jq || { echo "FAIL: jq not found"; exit 1; }
+            echo "PASS: curl and jq are available"
+
+workflows:
+  test-deploy:
+    jobs:
+      - test-missing-token:
+          filters: *filters
+      - test-missing-approvers:
+          filters: *filters
+      - test-missing-workflow-id:
+          filters: *filters
+      - test-orb-command:
+          filters: *filters
+      - test-os-detection:
+          filters: *filters
+      - orb-tools/pack:
+          filters: *release-filters
+      - orb-tools/publish:
+          orb_name: cci-labs/approval-gates
+          vcs_type: << pipeline.project.type >>
+          pub_type: production
+          requires:
+            - orb-tools/pack
+            - test-missing-token
+            - test-missing-approvers
+            - test-missing-workflow-id
+            - test-orb-command
+            - test-os-detection
+          context: orb-publishing
+          filters: *release-filters

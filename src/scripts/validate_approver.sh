@@ -1,6 +1,40 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+# Detect platform and ensure dependencies are available.
+detect_os() {
+  case "$(uname -s | tr '[:upper:]' '[:lower:]')" in
+    linux*)  PLATFORM="linux" ;;
+    darwin*) PLATFORM="linux" ;;
+    msys*|cygwin*|mingw*) PLATFORM="windows" ;;
+    *)
+      echo "ERROR: Unsupported platform: $(uname -s)"
+      exit 1
+      ;;
+  esac
+}
+
+ensure_deps() {
+  if ! command -v curl &>/dev/null; then
+    echo "ERROR: curl is required but not found."
+    exit 1
+  fi
+  if ! command -v jq &>/dev/null; then
+    if [[ "$PLATFORM" == "windows" ]]; then
+      echo "jq not found, installing via Chocolatey..."
+      choco install jq -y --no-progress >/dev/null 2>&1
+      eval "$(grep -v 'export PATH' /c/ProgramData/chocolatey/bin/refreshenv.cmd 2>/dev/null || true)"
+      export PATH="/c/ProgramData/chocolatey/bin:$PATH"
+    else
+      echo "ERROR: jq is required but not found."
+      exit 1
+    fi
+  fi
+}
+
+detect_os
+ensure_deps
+
 # Resolve env var names from orb parameters (indirect expansion).
 # Falls back to direct env var names for standalone use outside the orb.
 if [[ -n "${ORB_VAL_API_TOKEN_VAR:-}" ]]; then

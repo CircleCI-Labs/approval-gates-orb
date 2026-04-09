@@ -22,24 +22,16 @@ parameters:
     description: >
       Name of the specific approval job to check. If empty, the first
       successful approval-type job in the workflow is used.
-  platform:
-    type: enum
-    enum: ["linux", "windows"]
-    default: "linux"
-    description: >
-      Target platform. Use linux for Bash-based executors, windows
-      for PowerShell-based executors.
   executor:
     type: executor
     default: default
     description: >
       Executor to run the validation on. Defaults to the orb's
       Linux Docker executor. Use the windows executor for
-      PowerShell-based validation.
+      Windows-based pipelines.
 executor: << parameters.executor >>
 steps:
   - validate-approver:
       api-token: << parameters.api-token >>
       authorized-approvers: << parameters.authorized-approvers >>
       approval-job-name: << parameters.approval-job-name >>
-      platform: << parameters.platform >>
