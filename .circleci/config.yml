@@ -16,7 +16,6 @@ workflows:
       - orb-tools/pack:
           filters: *filters
       - orb-tools/review:
-          orb_name: cci-labs/approval-gates
           filters: *filters
       - shellcheck/check:
           dir: src/scripts

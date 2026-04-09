@@ -1,4 +1,3 @@
----
 description: >
   Uses the validate_approver job as a standalone workflow step between
   the approval gate and your deployment job. This keeps your deploy

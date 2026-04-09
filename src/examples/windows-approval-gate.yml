@@ -1,4 +1,3 @@
----
 description: >
   Approval gate validation on a Windows executor. The orb automatically
   detects the platform and installs dependencies as needed.
